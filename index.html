@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI Electricity Waste Predictor</title>
+  <meta name="description" content="Monitor electricity usage, detect anomalies, predict future consumption, and get energy-saving recommendations. Powered by AI and IoT sensors."/>
+  <link rel="stylesheet" href="/static/css/style.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+<div class="app-layout">
+
+  <!-- ══════════════ SIDEBAR ══════════════ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon">
+        <!-- Zap icon -->
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+      </div>
+      <h1>AI Electricity<br>Waste Predictor</h1>
+      <div class="tagline">Predict Energy. Detect Waste. Save Electricity.</div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Main</div>
+      <div class="nav-item active" data-page="dashboard">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </div>
+      <div class="nav-item" data-page="predictions">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        AI Predictions
+      </div>
+      <div class="nav-item" data-page="alerts">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        Waste Detection
+      </div>
+
+      <div class="nav-section-label" style="margin-top:8px">Tools</div>
+      <div class="nav-item" data-page="calculator">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="12" y2="14"/></svg>
+        Bill Calculator
+      </div>
+      <div class="nav-item" data-page="recommendations">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        Recommendations
+      </div>
+
+      <div class="nav-section-label" style="margin-top:8px">Data</div>
+      <div class="nav-item" data-page="readings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+        Sensor Readings
+      </div>
+      <div class="nav-item" data-page="settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        Settings
+      </div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="demo-badge">
+        <div class="pulse"></div>
+        DEMO DATA MODE
+      </div>
+    </div>
+  </aside>
+
+  <!-- ══════════════ OVERLAY (mobile) ══════════════ -->
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <!-- ══════════════ MAIN ══════════════ -->
+  <main class="main-content">
+
+    <!-- Top Bar -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="btn-icon hamburger" id="hamburger" aria-label="Menu">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <span class="topbar-title">AI Electricity Waste Predictor</span>
+      </div>
+      <div class="topbar-right">
+        <div class="status-chip demo" id="ts-status">
+          <div class="dot"></div>Demo Mode
+        </div>
+        <button class="btn-icon" id="btn-refresh" title="Refresh data" aria-label="Refresh">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- ══════ PAGE 1: DASHBOARD ══════ -->
+    <section class="page active" id="page-dashboard">
+      <div class="page-header">
+        <h2>Dashboard</h2>
+        <p>Real-time electricity monitoring and analytics overview</p>
+      </div>
+
+      <div class="demo-banner">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <span><strong>DEMO DATA</strong> – Showing 30 days of simulated sensor readings. Connect an ESP32 + ThingSpeak or add readings manually to see live data.</span>
+      </div>
+
+      <!-- Metric Cards -->
+      <div class="metrics-grid">
+        <div class="metric-card accent-cyan">
+          <div class="metric-icon" style="background:rgba(0,212,255,0.12)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#00d4ff" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+          </div>
+          <div class="metric-label">Voltage</div>
+          <div class="metric-value mono" id="m-voltage">—</div>
+        </div>
+        <div class="metric-card accent-blue">
+          <div class="metric-icon" style="background:rgba(59,130,246,0.12)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          </div>
+          <div class="metric-label">Current</div>
+          <div class="metric-value mono" id="m-current">—</div>
+        </div>
+        <div class="metric-card accent-purple">
+          <div class="metric-icon" style="background:rgba(139,92,246,0.12)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          </div>
+          <div class="metric-label">Power</div>
+          <div class="metric-value mono" id="m-power">—</div>
+        </div>
+        <div class="metric-card accent-green">
+          <div class="metric-icon" style="background:rgba(16,185,129,0.12)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          </div>
+          <div class="metric-label">Energy (30 Days)</div>
+          <div class="metric-value mono" id="m-energy">—</div>
+          <div class="metric-sub" id="m-energy-sub">24h: — kWh</div>
+        </div>
+        <div class="metric-card accent-yellow">
+          <div class="metric-icon" style="background:rgba(245,158,11,0.12)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          </div>
+          <div class="metric-label">Est. Bill (30 Days)</div>
+          <div class="metric-value mono" id="m-bill">—</div>
+          <div class="metric-sub" id="m-bill-sub">Based on current rate</div>
+        </div>
+        <div class="metric-card accent-cyan">
+          <div class="metric-icon" style="background:rgba(0,212,255,0.12)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#00d4ff" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-.49-4.49"/></svg>
+          </div>
+          <div class="metric-label">Predicted Tomorrow</div>
+          <div class="metric-value mono" style="font-size:18px" id="m-predicted">—</div>
+          <div class="metric-sub" id="m-model">—</div>
+        </div>
+        <div class="metric-card accent-green">
+          <div class="metric-icon" style="background:rgba(16,185,129,0.12)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+          <div class="metric-label">System Status</div>
+          <div class="metric-value" style="font-size:16px" id="m-status">—</div>
+        </div>
+        <div class="metric-card accent-blue">
+          <div class="metric-icon" style="background:rgba(59,130,246,0.12)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <div class="metric-label">Last Updated</div>
+          <div class="metric-value" style="font-size:12px;font-weight:500" id="m-updated">—</div>
+        </div>
+      </div>
+
+      <!-- Charts -->
+      <div class="charts-grid">
+        <div class="card full">
+          <div class="card-header">
+            <div class="card-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+              Daily Energy Consumption (kWh/day) — Last 30 Days
+            </div>
+          </div>
+          <div class="chart-container"><canvas id="chart-daily-energy"></canvas></div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/></svg>
+              Voltage History (24h)
+            </div>
+          </div>
+          <div class="chart-container"><canvas id="chart-voltage"></canvas></div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+              Power &amp; Current (24h)
+            </div>
+          </div>
+          <div class="chart-container"><canvas id="chart-power"></canvas></div>
+        </div>
+      </div>
+
+      <!-- Recent Readings Table -->
+      <div class="card" style="margin-bottom:20px">
+        <div class="card-header">
+          <div class="card-title">Recent Sensor Readings</div>
+        </div>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Timestamp</th>
+                <th>Voltage (V)</th>
+                <th>Current (A)</th>
+                <th>Power (W)</th>
+                <th>Energy (kWh)</th>
+              </tr>
+            </thead>
+            <tbody id="dash-readings-tbody">
+              <tr><td colspan="5" style="text-align:center;color:var(--text-muted)">Loading…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Alerts + Recommendations -->
+      <div class="charts-grid">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              Recent Alerts
+            </div>
+            <button class="btn btn-secondary btn-sm" onclick="navigate('alerts')">View All</button>
+          </div>
+          <div id="dash-alerts">Loading…</div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+              Quick Recommendations
+            </div>
+            <button class="btn btn-secondary btn-sm" onclick="navigate('recommendations')">View All</button>
+          </div>
+          <div id="dash-recs">Loading…</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════ PAGE 2: PREDICTIONS ══════ -->
+    <section class="page" id="page-predictions">
+      <div class="page-header">
+        <h2>AI Predictions</h2>
+        <p>Forecast future electricity consumption using historical data</p>
+      </div>
+      <div class="demo-banner">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <span>Predictions use real readings from the database. With ≥7 days of data, a <strong>Linear Regression</strong> model is trained. Otherwise a <strong>moving-average baseline</strong> is used and clearly labelled.</span>
+      </div>
+
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:20px">
+        <div>
+          <div style="font-size:13px;color:var(--text-muted);margin-bottom:4px">Active Model</div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <span class="pred-model-badge" id="pred-model-name">Loading…</span>
+            <span id="pred-trained" style="font-size:12px;font-weight:600">—</span>
+          </div>
+        </div>
+        <button class="btn btn-primary" id="btn-refresh-pred">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+          Refresh Prediction
+        </button>
+      </div>
+
+      <div class="pred-metrics">
+        <div class="pred-metric-card">
+          <div class="pred-metric-value" id="pred-next-hour">—</div>
+          <div class="pred-metric-label">Next-Hour Prediction</div>
+        </div>
+        <div class="pred-metric-card">
+          <div class="pred-metric-value" id="pred-next-day">—</div>
+          <div class="pred-metric-label">Next-Day Prediction</div>
+        </div>
+        <div class="pred-metric-card">
+          <div class="pred-metric-value" id="pred-data-pts">—</div>
+          <div class="pred-metric-label">Training Data</div>
+        </div>
+        <div class="pred-metric-card">
+          <div class="pred-metric-value" id="pred-mae">—</div>
+          <div class="pred-metric-label">MAE (kWh)</div>
+        </div>
+      </div>
+
+      <div class="charts-grid">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Actual vs Predicted (kWh/day)</div>
+          </div>
+          <div class="chart-container"><canvas id="chart-avp"></canvas></div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">7-Day Energy Forecast</div>
+          </div>
+          <div class="chart-container"><canvas id="chart-forecast"></canvas></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title" style="margin-bottom:10px">How Predictions Work</div>
+        <p id="pred-notes" style="font-size:13px;color:var(--text-secondary);line-height:1.8">Loading…</p>
+        <div class="info-box" style="margin-top:12px">
+          <strong>Note:</strong> These predictions are estimates based on historical data patterns.
+          Real electricity consumption depends on many factors including weather, occupancy, appliance usage, and more.
+          The model uses a <strong>chronological train/test split</strong> to avoid data leakage.
+          MAE (Mean Absolute Error) measures average prediction error in kWh per day.
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════ PAGE 3: ALERTS ══════ -->
+    <section class="page" id="page-alerts">
+      <div class="page-header">
+        <h2>Electricity Waste Detection</h2>
+        <p>Anomaly detection for voltage deviations and high power consumption</p>
+      </div>
+
+      <!-- Config display -->
+      <div class="card" style="margin-bottom:20px">
+        <div class="card-title" style="margin-bottom:12px">Detection Configuration</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px">
+          <div class="device-status-card">
+            <div class="device-status-row"><span class="label">Voltage Baseline</span><strong id="cfg-baseline">—</strong></div>
+            <div class="device-status-row"><span class="label">Deviation Threshold</span><strong id="cfg-threshold">—</strong></div>
+          </div>
+          <div style="font-size:12px;color:var(--text-muted);padding:12px;background:var(--bg-secondary);border-radius:8px;line-height:1.7;border:1px solid var(--border)">
+            Based on ESP32 firmware logic: baseline from 30 valid readings,
+            4% threshold, 3 consecutive anomalies before alert.
+            These are configurable defaults, not universal electrical safety limits.
+            <strong style="color:var(--yellow)">Voltage anomaly ≠ electricity waste.</strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- Alert summary -->
+      <div class="metrics-grid" style="margin-bottom:20px">
+        <div class="metric-card accent-red">
+          <div class="metric-label">High Severity</div>
+          <div class="metric-value mono" id="alert-count-high">—</div>
+        </div>
+        <div class="metric-card accent-yellow">
+          <div class="metric-label">Medium Severity</div>
+          <div class="metric-value mono" id="alert-count-medium">—</div>
+        </div>
+        <div class="metric-card accent-blue">
+          <div class="metric-label">Low Severity</div>
+          <div class="metric-value mono" id="alert-count-low">—</div>
+        </div>
+        <div class="metric-card accent-cyan">
+          <div class="metric-label">Total Alerts</div>
+          <div class="metric-value mono" id="alert-count-total">—</div>
+        </div>
+      </div>
+
+      <!-- Filters -->
+      <div class="card" style="margin-bottom:20px">
+        <div class="card-title" style="margin-bottom:12px">Filters</div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Severity</label>
+            <select class="form-control" id="filter-severity">
+              <option value="">All Severities</option>
+              <option>High</option>
+              <option>Medium</option>
+              <option>Low</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>From Date</label>
+            <input type="date" class="form-control" id="filter-start"/>
+          </div>
+          <div class="form-group">
+            <label>To Date</label>
+            <input type="date" class="form-control" id="filter-end"/>
+          </div>
+        </div>
+        <div class="btn-group" style="margin-top:12px">
+          <button class="btn btn-primary" id="btn-filter-alerts">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+            Apply Filters
+          </button>
+          <button class="btn btn-secondary" id="btn-clear-filters">Clear</button>
+        </div>
+      </div>
+
+      <!-- Alert list -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Alert History</div>
+        </div>
+        <div id="alerts-list">Loading…</div>
+      </div>
+    </section>
+
+    <!-- ══════ PAGE 4: BILL CALCULATOR ══════ -->
+    <section class="page" id="page-calculator">
+      <div class="page-header">
+        <h2>Electricity Bill Calculator</h2>
+        <p>Estimate your electricity bill and see potential savings</p>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+        <!-- Input -->
+        <div class="card">
+          <div class="card-title" style="margin-bottom:16px">Input Parameters</div>
+          <div class="form-grid" style="grid-template-columns:1fr">
+            <div class="form-group">
+              <label for="calc-kwh">Energy Consumption (kWh) *</label>
+              <input type="number" class="form-control" id="calc-kwh" placeholder="e.g. 150" min="0" step="0.01"/>
+              <div class="error-msg" id="calc-kwh-err"></div>
+            </div>
+            <div class="form-group">
+              <label for="calc-rate">Rate per Unit (₹/kWh) *</label>
+              <input type="number" class="form-control" id="calc-rate" placeholder="e.g. 8.0" min="0" step="0.01" value="8.0"/>
+              <div class="error-msg" id="calc-rate-err"></div>
+            </div>
+            <div class="form-group">
+              <label for="calc-addl">Additional Charges (₹)</label>
+              <input type="number" class="form-control" id="calc-addl" placeholder="Fixed charges, taxes, etc." min="0" step="0.01" value="0"/>
+            </div>
+            <div class="form-group">
+              <label for="calc-reduction">Consumption Reduction Target (%)</label>
+              <input type="number" class="form-control" id="calc-reduction" placeholder="e.g. 20 (leave blank to skip)" min="0" max="99" step="1"/>
+              <div class="error-msg" id="calc-reduction-err"></div>
+            </div>
+          </div>
+          <div style="margin-top:16px">
+            <button class="btn btn-primary" id="btn-calculate" style="width:100%">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="12" y2="14"/></svg>
+              Calculate Bill
+            </button>
+          </div>
+
+          <div class="info-box">
+            <strong>Formula used:</strong><br>
+            Energy Cost = Consumption (kWh) × Rate (₹/kWh)<br>
+            Estimated Bill = Energy Cost + Additional Charges<br><br>
+            <strong>Important:</strong> Real electricity bills may include tariff slabs, fixed charges, fuel surcharges, subsidies, and local regulatory fees. Always verify with your actual bill or electricity provider.
+          </div>
+        </div>
+
+        <!-- Result -->
+        <div>
+          <div id="calc-result" style="display:none">
+            <div class="calc-result-box" style="margin-bottom:16px">
+              <div style="font-size:12px;color:var(--text-muted);margin-bottom:6px">ESTIMATED BILL</div>
+              <div class="calc-amount" id="calc-total">₹ —</div>
+              <div class="calc-breakdown">
+                <div class="calc-row"><span class="label">Energy Cost</span><span class="value" id="calc-energy-cost">—</span></div>
+                <div class="calc-row"><span class="label">Additional Charges</span><span class="value" id="calc-addl-display">—</span></div>
+                <div class="calc-row total"><span class="label">Total Estimated Bill</span><span class="value" id="calc-total-row">—</span></div>
+              </div>
+            </div>
+
+            <div class="calc-savings-box" id="calc-savings-section" style="display:none">
+              <div style="font-size:12px;color:var(--text-muted);margin-bottom:6px">POTENTIAL SAVINGS</div>
+              <div class="savings-amount" id="calc-saved-amount">₹ —</div>
+              <div style="margin-top:12px;font-size:13px;color:var(--text-secondary)">
+                <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(16,185,129,0.2)">
+                  <span>Reduced Consumption</span><strong id="calc-reduced-kwh">—</strong>
+                </div>
+                <div style="display:flex;justify-content:space-between;padding:6px 0">
+                  <span>Reduced Bill</span><strong id="calc-reduced-bill">—</strong>
+                </div>
+              </div>
+              <div class="disclaimer">* Savings estimate based on linear tariff calculation. Actual savings depend on your tariff structure, subsidies, and fixed charges.</div>
+            </div>
+          </div>
+
+          <!-- Comparison Chart -->
+          <div class="card" id="calc-chart-section" style="display:none;margin-top:16px">
+            <div class="card-title" style="margin-bottom:12px">Bill Comparison</div>
+            <div class="chart-container"><canvas id="chart-bill-compare"></canvas></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════ PAGE 5: RECOMMENDATIONS ══════ -->
+    <section class="page" id="page-recommendations">
+      <div class="page-header">
+        <h2>Energy-Saving Recommendations</h2>
+        <p>Practical steps to reduce electricity consumption and lower your bill</p>
+      </div>
+      <div class="info-box" style="margin-bottom:20px">
+        All savings estimates are indicative only. Actual savings depend on your specific appliances, tariff slab, usage patterns, and local electricity rates. Savings figures assume a flat rate of ₹8/kWh; adjust for your actual rate.
+      </div>
+      <div id="recs-list">Loading…</div>
+    </section>
+
+    <!-- ══════ PAGE 6: READINGS ══════ -->
+    <section class="page" id="page-readings">
+      <div class="page-header">
+        <h2>Sensor Readings</h2>
+        <p>View, add, filter, import and export all sensor data</p>
+      </div>
+
+      <!-- Add Reading -->
+      <div class="card" style="margin-bottom:20px">
+        <div class="card-title" style="margin-bottom:14px">Add New Reading</div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Voltage (V) *</label>
+            <input type="number" class="form-control" id="add-voltage" placeholder="e.g. 230.5" step="0.01"/>
+            <div class="error-msg" id="add-voltage-err"></div>
+          </div>
+          <div class="form-group">
+            <label>Current (A) *</label>
+            <input type="number" class="form-control" id="add-current" placeholder="e.g. 2.5" step="0.001"/>
+            <div class="error-msg" id="add-current-err"></div>
+          </div>
+          <div class="form-group">
+            <label>Power (W) <span style="color:var(--text-muted)">(optional)</span></label>
+            <input type="number" class="form-control" id="add-power" placeholder="Auto-calculated if blank" step="0.01"/>
+          </div>
+          <div class="form-group">
+            <label>Energy (kWh) <span style="color:var(--text-muted)">(optional)</span></label>
+            <input type="number" class="form-control" id="add-energy" placeholder="Cumulative energy" step="0.0001"/>
+          </div>
+          <div class="form-group">
+            <label>Device ID</label>
+            <input type="text" class="form-control" id="add-device" placeholder="ESP32-01" value="ESP32-01"/>
+          </div>
+          <div class="form-group">
+            <label>Data Source</label>
+            <select class="form-control" id="add-source">
+              <option>Manual</option>
+              <option>Simulated</option>
+              <option>ThingSpeak</option>
+              <option>Hardware</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-primary" id="btn-add-reading">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add Reading
+          </button>
+        </div>
+      </div>
+
+      <!-- Toolbar -->
+      <div class="toolbar">
+        <div class="search-box">
+          <div class="search-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
+          <input type="text" class="form-control" id="readings-search" placeholder="Search by device, source, status…"/>
+        </div>
+        <input type="date" class="form-control" id="readings-start" style="width:auto"/>
+        <input type="date" class="form-control" id="readings-end"   style="width:auto"/>
+        <select class="form-control" id="readings-source" style="width:auto">
+          <option value="">All Sources</option>
+          <option>Simulated</option>
+          <option>Manual</option>
+          <option>ThingSpeak</option>
+          <option>Hardware</option>
+        </select>
+        <button class="btn btn-primary btn-sm" id="btn-search-readings">Search</button>
+        <button class="btn btn-secondary btn-sm" id="btn-export-csv">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Export CSV
+        </button>
+        <button class="btn btn-secondary btn-sm" id="btn-import-csv">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          Import CSV
+        </button>
+        <input type="file" id="csv-file-input" accept=".csv" style="display:none"/>
+        <button class="btn btn-danger btn-sm" id="btn-reset-data">Reset Demo Data</button>
+      </div>
+
+      <!-- Table -->
+      <div class="card">
+        <div class="table-wrapper">
+          <table id="readings-table">
+            <thead>
+              <tr>
+                <th data-sort="timestamp">Timestamp ↕</th>
+                <th data-sort="voltage">Voltage (V) ↕</th>
+                <th data-sort="current">Current (A) ↕</th>
+                <th data-sort="power">Power (W) ↕</th>
+                <th data-sort="energy_kwh">Energy (kWh) ↕</th>
+                <th>Device</th>
+                <th data-sort="source">Source ↕</th>
+                <th data-sort="status">Status ↕</th>
+              </tr>
+            </thead>
+            <tbody id="readings-tbody">
+              <tr><td colspan="8" style="text-align:center;color:var(--text-muted)">Loading…</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="pagination" id="readings-pagination" style="padding:12px 0 0"></div>
+      </div>
+    </section>
+
+    <!-- ══════ PAGE 7: SETTINGS ══════ -->
+    <section class="page" id="page-settings">
+      <div class="page-header">
+        <h2>Settings &amp; Device Status</h2>
+        <p>Configure detection thresholds, billing rates, and ThingSpeak integration</p>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+
+        <!-- Device Status -->
+        <div>
+          <div class="settings-section">
+            <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg> Device Status</h3>
+            <div class="device-status-card">
+              <div class="device-status-row"><span class="label">Server Status</span><strong style="color:var(--green)" id="dev-status">—</strong></div>
+              <div class="device-status-row"><span class="label">Total Readings</span><strong id="dev-readings">—</strong></div>
+              <div class="device-status-row"><span class="label">ThingSpeak Configured</span><strong id="dev-ts-config">—</strong></div>
+              <div class="device-status-row"><span class="label">ThingSpeak Connection</span><strong id="dev-ts-connect">—</strong></div>
+              <div class="device-status-row"><span class="label">Demo Mode</span><strong id="dev-demo">—</strong></div>
+            </div>
+            <div id="dev-ts-reason" style="font-size:11px;color:var(--text-muted);margin-top:6px"></div>
+          </div>
+
+          <!-- ThingSpeak -->
+          <div class="settings-section">
+            <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg> ThingSpeak Integration</h3>
+            <div class="info-box" style="margin-bottom:12px">
+              API credentials are configured via <strong>.env</strong> file on the server (never exposed to the browser).
+              After setting <code>THINGSPEAK_CHANNEL_ID</code> and <code>THINGSPEAK_READ_API_KEY</code>, restart the server and use the Sync button.
+            </div>
+            <div class="settings-grid">
+              <div class="form-group">
+                <label>Fetch Interval (seconds)</label>
+                <input type="number" class="form-control" id="cfg-ts-interval" min="30"/>
+              </div>
+              <div class="form-group">
+                <label>Voltage Field</label>
+                <input type="text" class="form-control" id="cfg-field-v" placeholder="field1"/>
+              </div>
+              <div class="form-group">
+                <label>Current Field</label>
+                <input type="text" class="form-control" id="cfg-field-a" placeholder="field2"/>
+              </div>
+              <div class="form-group">
+                <label>Power Field</label>
+                <input type="text" class="form-control" id="cfg-field-w" placeholder="field3"/>
+              </div>
+              <div class="form-group">
+                <label>Energy Field</label>
+                <input type="text" class="form-control" id="cfg-field-e" placeholder="field4"/>
+              </div>
+            </div>
+            <div class="btn-group" style="margin-top:12px">
+              <button class="btn btn-secondary" id="btn-sync-ts">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+                Sync ThingSpeak Now
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Configuration -->
+        <div>
+          <div class="settings-section">
+            <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> Billing Settings</h3>
+            <div class="settings-grid">
+              <div class="form-group">
+                <label>Electricity Rate (₹/kWh)</label>
+                <input type="number" class="form-control" id="cfg-rate" min="0" step="0.01"/>
+              </div>
+            </div>
+          </div>
+
+          <div class="settings-section">
+            <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg> Anomaly Detection</h3>
+            <div class="settings-grid">
+              <div class="form-group">
+                <label>Voltage Baseline (V)</label>
+                <input type="number" class="form-control" id="cfg-baseline" min="100" max="300" step="0.1"/>
+              </div>
+              <div class="form-group">
+                <label>Voltage Threshold (%)</label>
+                <input type="number" class="form-control" id="cfg-threshold" min="0.5" max="20" step="0.5"/>
+              </div>
+              <div class="form-group">
+                <label>Consecutive Readings Before Alert</label>
+                <input type="number" class="form-control" id="cfg-consec" min="1" max="10"/>
+              </div>
+            </div>
+          </div>
+
+          <div class="btn-group">
+            <button class="btn btn-primary" id="btn-save-settings">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+              Save Settings
+            </button>
+          </div>
+
+          <div class="info-box" style="margin-top:16px">
+            <strong>ESP32 Hardware Note:</strong> The ESP32 project uses an ACS712 current sensor and voltage divider circuit. Readings depend on correct calibration. Power factor for AC loads is approximately 0.8–0.95; apparent power (V×I) is not the same as real power. These settings affect anomaly detection thresholds only.
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- Toast container -->
+<div id="toast-container"></div>
+
+<!-- Scripts -->
+<script src="/static/js/app.js"></script>
+<script src="/static/js/dashboard.js"></script>
+</body>
+</html>
